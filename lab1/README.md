@@ -78,3 +78,4 @@ CSV File Input -> String Operations -> Filter empty CUST_ID -> Replace MINIMUM_P
 <img width="1198" height="419" alt="image" src="https://github.com/user-attachments/assets/fb77afa7-34b9-4936-9624-935e38b646bf" />
 
 ## Вывод
+В ходе лабораторной работы был успешно освоен базовый функционал Pentaho Data Integration: создан ETL-конвейер, выполняющий извлечение данных из CSV-файла, их очистку (удаление пробелов, фильтрация пустых идентификаторов, замена NULL-значений на 0) и загрузку в базу данных MySQL. Проверка SQL-запросами подтвердила корректность обработки данных. 
