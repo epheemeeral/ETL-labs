@@ -32,6 +32,10 @@
 
 ### Создание ETL-конвейера
 
+Схема и запуск конвейера:
+CSV File Input -> String Operations -> Filter empty CUST_ID -> Replace MINIMUM_PAYMENTS -> Replace CREDIT_LIMIT -> Table Output (MySQL)
+<img width="1204" height="775" alt="image" src="https://github.com/user-attachments/assets/50cff0fd-77e2-4764-a3b0-c0903f5629eb" />
+
 В Pentaho Spoon создана трансформация lab_01_loyalty_program.ktr, реализующая полный ETL-конвейер из 6 шагов:
 1) CSV File Input
 Шаг загружает данные из файла CC GENERAL.csv. Настроены типы данных для всех 18 столбцов: CUST_ID как String, числовые поля как Number (с точностью до 6 знаков), целочисленные поля (CASH_ADVANCE_TRX, PURCHASES_TRX, TENURE) как Integer.
@@ -59,10 +63,18 @@
 
 <img width="1201" height="684" alt="image" src="https://github.com/user-attachments/assets/08483b9a-693e-4bc0-9cf8-e19966a14558" />
 
-Схема и запуск конвейера:
-CSV File Input -> String Operations -> Filter empty CUST_ID -> Replace MINIMUM_PAYMENTS -> Replace CREDIT_LIMIT -> Table Output (MySQL)
-<img width="1204" height="775" alt="image" src="https://github.com/user-attachments/assets/50cff0fd-77e2-4764-a3b0-c0903f5629eb" />
-
-
 ### Проверка результатов SQL-запросами
 
+1) Подсчёт общего количества записей
+<img width="778" height="206" alt="image" src="https://github.com/user-attachments/assets/b0ca60ed-c964-47fb-8eed-055eecad9420" />
+
+2) Проверка отсутствия NULL в MINIMUM_PAYMENTS
+<img width="778" height="176" alt="image" src="https://github.com/user-attachments/assets/0dd03f7f-c90c-49c8-b459-696500a5896e" />
+
+4) Проверка отсутствия NULL в CREDIT_LIMIT
+<img width="773" height="211" alt="image" src="https://github.com/user-attachments/assets/91b9b58f-3aa9-41cc-bbdb-4538eec058ac" />
+
+6) Просмотр первых 10 записей
+<img width="1198" height="419" alt="image" src="https://github.com/user-attachments/assets/fb77afa7-34b9-4936-9624-935e38b646bf" />
+
+## Вывод
