@@ -43,24 +43,36 @@ Value: /home/dba/Downloads/datain/samplestore-general.csv
 
 #### Трансформация 1: lab_02_1_csv_orders.ktr
 Загрузка данных заказов в таблицу orders.
-CSV file input: Чтение файла ${CSV_FILE_PATH}, разделитель ;, кодировка UTF-8, 23 поля.
-Select values: Переименование полей в snake_case (Row ID -> row_id, Order Date -> order_date и т.д.). Конвертация типов: row_id -> Integer, order_date и ship_date -> Date (dd.MM.yyyy).
-Memory group by (дедупликация): Группировка по полям: row_id, order_date, ship_date, ship_mode, sales, quantity, discount, profit, returned. Устраняет дублирующиеся записи.
-Filter rows (валидация): Условие: order_date IS NOT NULL AND ship_date IS NOT NULL. TRUE -> Value mapper (далее в БД).
-FALSE -> Write to log (логирование ошибочных записей).
-Value mapper: Преобразование поля returned: Yes -> 1, No -> 0, пустое -> 0.
-Table output: Загрузка в таблицу orders. Truncate before insert. Batch по 1000 записей.
 
-####  Трансформация 2: lab_02_2_csv_customers.ktr
+| Шаг | Описание |
+|-----|----------|
+| **CSV file input** | Чтение файла `${CSV_FILE_PATH}`, разделитель `;`, кодировка UTF-8, 23 поля. |
+| **Select values** | Переименование полей в snake_case (`Row ID` → `row_id`, `Order Date` → `order_date` и т.д.). Конвертация типов: `row_id` → Integer, `order_date` и `ship_date` → Date (dd.MM.yyyy). |
+| **Memory group by** | Группировка по полям: `row_id`, `order_date`, `ship_date`, `ship_mode`, `sales`, `quantity`, `discount`, `profit`, `returned`. Устраняет дублирующиеся записи. |
+| **Filter rows** | Условие: `order_date IS NOT NULL AND ship_date IS NOT NULL`. **TRUE** → Value mapper (далее в БД). **FALSE** → Write to log (логирование ошибочных записей). |
+| **Value mapper** | Преобразование поля `returned`: `Yes` → `1`, `No` → `0`, пустое → `0`. |
+| **Table output** | Загрузка в таблицу `orders`. Truncate before insert. Batch по 1000 записей. |
+
+---
+
+#### Трансформация 2: lab_02_2_csv_customers.ktr
 Загрузка уникальных клиентов в таблицу customers.
-Select values: Выбор 8 полей клиента: customer_id, customer_name, segment, country, city, state, postal_code, region.
-Memory group by: Дедупликация по всем полям клиента. Устраняет повторяющихся клиентов.
-Table output: Загрузка уникальных клиентов в таблицу customers.
+
+| Шаг | Описание |
+|-----|----------|
+| **Select values** | Выбор 8 полей клиента: `customer_id`, `customer_name`, `segment`, `country`, `city`, `state`, `postal_code`, `region`. |
+| **Memory group by** | Дедупликация по всем полям клиента. Устраняет повторяющихся клиентов. |
+| **Table output** | Загрузка уникальных клиентов в таблицу `customers`. |
+
+---
 
 #### Трансформация 3: lab_02_3_csv_products.ktr
 Загрузка уникальных продуктов в таблицу products.
-Select values: Выбор 5 полей продукта: product_id, category, sub_category, product_name, person.
-Memory group by: Дедупликация по product_id и остальным полям.
-Table output: Загрузка уникальных продуктов в таблицу products.
+
+| Шаг | Описание |
+|-----|----------|
+| **Select values** | Выбор 5 полей продукта: `product_id`, `category`, `sub_category`, `product_name`, `person`. |
+| **Memory group by** | Дедупликация по `product_id` и остальным полям. |
+| **Table output** | Загрузка уникальных продуктов в таблицу `products`. |
 
 
