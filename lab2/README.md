@@ -19,11 +19,21 @@
 <img width="782" height="147" alt="image" src="https://github.com/user-attachments/assets/6488ec92-9f97-4380-ad14-163babc3bbdf" />
 
 ### 2. Настройка Job (Главного задания)
-Set Variables: Создайте переменную пути к файлу.
+
+2.1 Set Variables: Создаем переменную пути к файлу.
 Variable: CSV_FILE_PATH
-Value: /home/dba/Downloads/datain/samplestore-general.csv (или путь внутри вашей ВМ).
-Check File Exists: Проверка наличия файла ${CSV_FILE_PATH}.
-HTTP (Download): Загрузка файла, если его нет.
-URL: https://raw.githubusercontent.com/BosenkoTM/workshop-on-ETL/main/data_for_lessons/samplestore-general.csv
-Target file: ${CSV_FILE_PATH}
-Transformation. Последовательный вызов трех трансформаций для загрузки данных.
+Value: /home/dba/Downloads/datain/samplestore-general.csv 
+<img width="1194" height="357" alt="image" src="https://github.com/user-attachments/assets/ba88b1f1-4ce2-4b44-8d6e-59932f7cd21a" />
+
+2.2 Check File Exists: Проверка наличия файла ${CSV_FILE_PATH}.
+<img width="407" height="170" alt="image" src="https://github.com/user-attachments/assets/d0ddcfcb-aedb-4ae6-8bce-f79bb2e61217" />
+
+2.3 HTTP (Download): Загрузка файла, если его нет.
+<img width="1209" height="771" alt="image" src="https://github.com/user-attachments/assets/7b17d075-8603-490d-a180-69ccbc81515c" />
+
+2.4 Transformation. Последовательный вызов трех трансформаций для загрузки данных.
+<img width="744" height="711" alt="image" src="https://github.com/user-attachments/assets/95581a0f-8a31-4f65-93ed-467775b2faef" />
+<img width="744" height="718" alt="image" src="https://github.com/user-attachments/assets/7d2c8399-4dfc-462e-9eda-4efeecf8a617" />
+<img width="745" height="711" alt="image" src="https://github.com/user-attachments/assets/85b87a2e-f127-468f-9a05-534bbefaf8b8" />
+
+
