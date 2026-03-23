@@ -85,6 +85,7 @@
 
 ### Статистика доставки (задание 1)
 Трансформация lab_02_4_delivery_stats.ktr анализирует время доставки.
+<img width="944" height="381" alt="image" src="https://github.com/user-attachments/assets/0bacb27b-3a4f-4e37-b684-0cffd910be7d" />
 
 | Шаг | Описание |
 |-----|----------|
@@ -95,6 +96,8 @@
 
 ### Анализ прибыли (задание 2)
 Трансформация lab_02_5_profit_analysis.ktr анализирует прибыль менеджера Chuck Magee по категориям и подкатегориям.
+
+<img width="961" height="412" alt="image" src="https://github.com/user-attachments/assets/067e2b73-8e12-4ff0-8591-ba6d56bac2de" />
 
 | Шаг | Описание |
 |-----|----------|
