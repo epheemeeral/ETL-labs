@@ -20,7 +20,8 @@
 
 ### 2. Настройка Job (Главного задания)
 
-Создаем Job (CSV_to_MySQL.kjb), который управляет всем процессом:
+Создаем Job (CSV_to_MySQL.kjb), который управляет всем процессом
+<img width="980" height="663" alt="image" src="https://github.com/user-attachments/assets/c27efa6e-15ee-4b4d-a503-506693eab628" />
 
 2.1 Set Variables: Создаем переменную пути к файлу.
 Variable: CSV_FILE_PATH
