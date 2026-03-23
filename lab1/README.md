@@ -37,26 +37,32 @@
 Шаг загружает данные из файла CC GENERAL.csv. Настроены типы данных для всех 18 столбцов: CUST_ID как String, числовые поля как Number (с точностью до 6 знаков), целочисленные поля (CASH_ADVANCE_TRX, PURCHASES_TRX, TENURE) как Integer.
 <img width="974" height="622" alt="image" src="https://github.com/user-attachments/assets/7f71dec5-8d0e-482f-b33a-a9bb3c097669" />
 
-3) String Operations
+2) String Operations
 Применяется операция Trim (both) к полю CUST_ID для удаления начальных и конечных пробелов. Это гарантирует корректность идентификаторов клиентов при загрузке в базу данных.
 <img width="974" height="158" alt="image" src="https://github.com/user-attachments/assets/6be74344-c517-4af9-9802-c99e01900401" />
 
-5) Filter Rows
+3) Filter Rows
 Фильтрация строк с пустым CUST_ID (условие: CUST_ID IS NOT NULL). Записи без идентификатора клиента отбрасываются как некорректные.
 <img width="740" height="381" alt="image" src="https://github.com/user-attachments/assets/14d6a4e0-b1f4-417f-8412-e53b13af79bc" />
 
-7) If Null (MINIMUM_PAYMENTS)
+4) If Null (MINIMUM_PAYMENTS)
 Замена пустых (NULL) значений в столбце MINIMUM_PAYMENTS на 0. В исходном датасете 313 записей (3.5%) с отсутствующими значениями.
 <img width="787" height="601" alt="image" src="https://github.com/user-attachments/assets/9de91136-2042-4761-8d47-a02f491c84ce" />
 
-9) If Null (CREDIT_LIMIT)
+5) If Null (CREDIT_LIMIT)
 Замена пустых (NULL) значений в столбце CREDIT_LIMIT на 0. Обнаружена 1 запись без указания кредитного лимита.
+<img width="786" height="600" alt="image" src="https://github.com/user-attachments/assets/9fdabfb5-b7df-4936-8e4d-70d961a1f515" />
 
-11) Table Output
+6) Table Output
 Очищенные данные загружаются в таблицу cc_loyalty базы данных mgpu_ico_etl_17 на сервере MySQL (95.131.149.21:3306). Перед вставкой таблица очищается (Truncate). Пакетная вставка по 1000 записей.
+<img width="932" height="760" alt="image" src="https://github.com/user-attachments/assets/13bdface-ee4c-4b4a-9320-20b8f14c03c4" />
 
-Схема конвейера:
+<img width="1201" height="684" alt="image" src="https://github.com/user-attachments/assets/08483b9a-693e-4bc0-9cf8-e19966a14558" />
+
+Схема и запуск конвейера:
 CSV File Input -> String Operations -> Filter empty CUST_ID -> Replace MINIMUM_PAYMENTS -> Replace CREDIT_LIMIT -> Table Output (MySQL)
+<img width="1204" height="775" alt="image" src="https://github.com/user-attachments/assets/50cff0fd-77e2-4764-a3b0-c0903f5629eb" />
+
 
 ### Проверка результатов SQL-запросами
 
