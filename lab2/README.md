@@ -55,9 +55,11 @@
 | **Value mapper** | Преобразование поля `returned`: `Yes` → `1`, `No` → `0`, пустое → `0`. |
 | **Table output** | Загрузка в таблицу `orders`. Truncate before insert. Batch по 1000 записей. |
 
+Проверка: <img width="461" height="83" alt="image" src="https://github.com/user-attachments/assets/bc53a063-eca9-4a03-a5a0-4dbb854dc19f" />
+
 ---
 
-#### Трансформация 2: lab_02_2_csv_customers.ktr
+#### Трансформация 2: lab_02_2_csv_to_Сustomers.ktr
 Загрузка уникальных клиентов в таблицу customers.
 
 <img width="978" height="648" alt="image" src="https://github.com/user-attachments/assets/ec0a0e0b-085b-4d84-a41c-0fe1bd02dc33" />
@@ -69,9 +71,11 @@
 | **Memory group by** | Дедупликация по всем полям клиента. Устраняет повторяющихся клиентов. |
 | **Table output** | Загрузка уникальных клиентов в таблицу `customers`. |
 
+Проверка: <img width="445" height="83" alt="image" src="https://github.com/user-attachments/assets/8b65e978-10f3-41d8-b13a-dbe7c5334b4c" />
+
 ---
 
-#### Трансформация 3: lab_02_3_csv_products.ktr
+#### Трансформация 3: lab_02_3_csv_to_products.ktr
 Загрузка уникальных продуктов в таблицу products.
 
 <img width="977" height="664" alt="image" src="https://github.com/user-attachments/assets/9104163f-b6c0-446c-9ed4-789b5283e858" />
@@ -81,6 +85,9 @@
 | **Select values** | Выбор 5 полей продукта: `product_id`, `category`, `sub_category`, `product_name`, `person`. |
 | **Memory group by** | Дедупликация по `product_id` и остальным полям. |
 | **Table output** | Загрузка уникальных продуктов в таблицу `products`. |
+
+Проверка: <img width="461" height="88" alt="image" src="https://github.com/user-attachments/assets/0fedc49c-a92b-4e58-8c78-3d37b2a8c5a8" />
+
 
 ## Индивидуальное задание 
 
