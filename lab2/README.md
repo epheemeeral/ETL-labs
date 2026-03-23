@@ -20,6 +20,8 @@
 
 ### 2. Настройка Job (Главного задания)
 
+Создаем Job (CSV_to_MySQL.kjb), который управляет всем процессом:
+
 2.1 Set Variables: Создаем переменную пути к файлу.
 Variable: CSV_FILE_PATH
 Value: /home/dba/Downloads/datain/samplestore-general.csv 
