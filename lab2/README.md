@@ -21,18 +21,17 @@
 ### 2. Настройка Job (Главного задания)
 
 Создаем Job (CSV_to_MySQL.kjb), который управляет всем процессом
-<img width="980" height="663" alt="image" src="https://github.com/user-attachments/assets/c27efa6e-15ee-4b4d-a503-506693eab628" />
+<img width="911" height="530" alt="image" src="https://github.com/user-attachments/assets/e47a36ad-a478-40ac-a43e-c1978fb16e10" />
 
 2.1 Set Variables: Создаем переменную пути к файлу.
-Variable: CSV_FILE_PATH
-Value: /home/dba/Downloads/datain/samplestore-general.csv 
-<img width="1194" height="357" alt="image" src="https://github.com/user-attachments/assets/ba88b1f1-4ce2-4b44-8d6e-59932f7cd21a" />
+<img width="1199" height="549" alt="image" src="https://github.com/user-attachments/assets/f052961b-3ec6-4141-8bb9-186eefad119f" />
 
 2.2 Check File Exists: Проверка наличия файла ${CSV_FILE_PATH}.
-<img width="407" height="170" alt="image" src="https://github.com/user-attachments/assets/d0ddcfcb-aedb-4ae6-8bce-f79bb2e61217" />
+<img width="412" height="179" alt="image" src="https://github.com/user-attachments/assets/edd8ba54-3f18-4de3-98de-3daea0213d55" />
 
 2.3 HTTP (Download): Загрузка файла, если его нет.
-<img width="1209" height="771" alt="image" src="https://github.com/user-attachments/assets/7b17d075-8603-490d-a180-69ccbc81515c" />
+<img width="1207" height="772" alt="image" src="https://github.com/user-attachments/assets/d58fb3d9-6497-462c-8f47-1cbe87b74847" />
+
 
 2.4 Transformation. Последовательный вызов трех трансформаций для загрузки данных.
 <img width="744" height="711" alt="image" src="https://github.com/user-attachments/assets/95581a0f-8a31-4f65-93ed-467775b2faef" />
@@ -43,6 +42,9 @@ Value: /home/dba/Downloads/datain/samplestore-general.csv
 
 #### Трансформация 1: lab_02_1_csv_orders.ktr
 Загрузка данных заказов в таблицу orders.
+
+<img width="872" height="390" alt="image" src="https://github.com/user-attachments/assets/523cd931-c59e-4c8f-9faa-6c0f0b54569e" />
+
 
 | Шаг | Описание |
 |-----|----------|
@@ -58,6 +60,8 @@ Value: /home/dba/Downloads/datain/samplestore-general.csv
 #### Трансформация 2: lab_02_2_csv_customers.ktr
 Загрузка уникальных клиентов в таблицу customers.
 
+<img width="775" height="377" alt="image" src="https://github.com/user-attachments/assets/44d918dc-bac4-4f3e-aeed-a422dd4c700c" />
+
 | Шаг | Описание |
 |-----|----------|
 | **Select values** | Выбор 8 полей клиента: `customer_id`, `customer_name`, `segment`, `country`, `city`, `state`, `postal_code`, `region`. |
@@ -68,6 +72,8 @@ Value: /home/dba/Downloads/datain/samplestore-general.csv
 
 #### Трансформация 3: lab_02_3_csv_products.ktr
 Загрузка уникальных продуктов в таблицу products.
+
+<img width="775" height="376" alt="image" src="https://github.com/user-attachments/assets/2f1eaba9-d3d5-4c8a-9149-90751051278f" />
 
 | Шаг | Описание |
 |-----|----------|
