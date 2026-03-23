@@ -21,7 +21,7 @@
 ### 2. Настройка Job (Главного задания)
 
 Создаем Job (CSV_to_MySQL.kjb), который управляет всем процессом
-<img width="911" height="530" alt="image" src="https://github.com/user-attachments/assets/e47a36ad-a478-40ac-a43e-c1978fb16e10" />
+<img width="984" height="668" alt="image" src="https://github.com/user-attachments/assets/79f60831-d521-4728-8ea1-51a41fcd055a" />
 
 2.1 Set Variables: Создаем переменную пути к файлу.
 <img width="1199" height="549" alt="image" src="https://github.com/user-attachments/assets/f052961b-3ec6-4141-8bb9-186eefad119f" />
@@ -60,7 +60,8 @@
 #### Трансформация 2: lab_02_2_csv_customers.ktr
 Загрузка уникальных клиентов в таблицу customers.
 
-<img width="775" height="377" alt="image" src="https://github.com/user-attachments/assets/44d918dc-bac4-4f3e-aeed-a422dd4c700c" />
+<img width="978" height="648" alt="image" src="https://github.com/user-attachments/assets/ec0a0e0b-085b-4d84-a41c-0fe1bd02dc33" />
+
 
 | Шаг | Описание |
 |-----|----------|
@@ -73,7 +74,7 @@
 #### Трансформация 3: lab_02_3_csv_products.ktr
 Загрузка уникальных продуктов в таблицу products.
 
-<img width="775" height="376" alt="image" src="https://github.com/user-attachments/assets/2f1eaba9-d3d5-4c8a-9149-90751051278f" />
+<img width="977" height="664" alt="image" src="https://github.com/user-attachments/assets/9104163f-b6c0-446c-9ed4-789b5283e858" />
 
 | Шаг | Описание |
 |-----|----------|
