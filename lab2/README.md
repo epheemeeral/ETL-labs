@@ -43,8 +43,7 @@
 #### Трансформация 1: lab_02_1_csv_orders.ktr
 Загрузка данных заказов в таблицу orders.
 
-<img width="872" height="390" alt="image" src="https://github.com/user-attachments/assets/523cd931-c59e-4c8f-9faa-6c0f0b54569e" />
-
+<img width="982" height="667" alt="image" src="https://github.com/user-attachments/assets/eabc38ad-ae6d-40f7-8c46-052937705654" />
 
 | Шаг | Описание |
 |-----|----------|
