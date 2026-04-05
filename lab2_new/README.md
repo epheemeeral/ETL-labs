@@ -10,39 +10,91 @@
 
 ---
 
-### 1. Подготовка базы данных
+## Структура репозитория
 
-<img width="778" height="158" alt="image" src="https://github.com/user-attachments/assets/6a3f30f2-e5fd-4e7d-85eb-4455723f47ee" />
+```
+lab2/
+├── CSV_to_MySQL.kjb          # Главный Job
+├── Load_Orders.ktr           # Трансформация: загрузка заказов
+├── Load_Customers.ktr        # Трансформация: загрузка клиентов
+├── Load_Products.ktr         # Трансформация: загрузка продуктов
+├── Analytics_Delivery.ktr    # Доп. задание 1: статистика доставки
+├── Analytics_Profit.ktr      # Доп. задание 2: анализ прибыли
+└── README.md
+```
 
-<img width="779" height="156" alt="image" src="https://github.com/user-attachments/assets/e62c469d-e22b-4d9a-80b2-2650b05e0522" />
-
-<img width="782" height="147" alt="image" src="https://github.com/user-attachments/assets/6488ec92-9f97-4380-ad14-163babc3bbdf" />
 ---
 
+## Техническое окружение
 
-### 2. Настройка Job (Главного задания)
+- **ETL**: Pentaho Data Integration 9.4
+- **СУБД**: MySQL 8.0 (удалённый сервер `95.131.149.21:3306`)
+- **БД**: `mgpu_ico_etl_17`
+- **Исходные данные**: `samplestore-general.csv` (~10 000 строк, разделитель `;`)
+- **ОС**: Ubuntu 22.04, Java OpenJDK 11
 
-Создаем Job (CSV_to_MySQL.kjb), который управляет всем процессом
-<img width="1319" height="629" alt="image" src="https://github.com/user-attachments/assets/07720850-2129-498f-a17e-790bac76039f" />
+---
 
-2.1 Set Variables: Создаем переменную пути к файлу.
-<img width="755" height="384" alt="image" src="https://github.com/user-attachments/assets/3cf3665a-6324-406d-87a2-2c91020e6d89" />
+## Структура базы данных
 
-2.2 Check File Exists: Проверка наличия файла ${CSV_FILE_PATH}.
-<img width="336" height="151" alt="image" src="https://github.com/user-attachments/assets/a948c3fd-2b50-4fa4-a5a3-ef8b594733b7" />
+```sql
+CREATE TABLE orders (
+    row_id      INT PRIMARY KEY,
+    order_date  DATE,
+    ship_date   DATE,
+    ship_mode   VARCHAR(50),
+    sales       DECIMAL(10,2),
+    quantity    INT,
+    discount    DECIMAL(4,2),
+    profit      DECIMAL(10,2),
+    returned    TINYINT(1) DEFAULT 0,
+    person      VARCHAR(100)
+);
 
-2.3 HTTP (Download): Загрузка файла, если его нет.
-<img width="1115" height="802" alt="image" src="https://github.com/user-attachments/assets/af27fe85-c9f3-43e4-8afd-b83047b27af2" />
+CREATE TABLE customers (
+    id            INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id   VARCHAR(20) NOT NULL,
+    customer_name VARCHAR(100),
+    segment       VARCHAR(50),
+    country       VARCHAR(100),
+    city          VARCHAR(100),
+    state         VARCHAR(100),
+    postal_code   VARCHAR(20),
+    region        VARCHAR(50),
+    person        VARCHAR(100)
+);
 
-### Шаги Job
+CREATE TABLE products (
+    id            INT AUTO_INCREMENT PRIMARY KEY,
+    product_id    VARCHAR(20) NOT NULL,
+    category      VARCHAR(50),
+    sub_category  VARCHAR(50),
+    product_name  VARCHAR(255),
+    person        VARCHAR(100)
+);
+```
+
+---
+
+## Job: CSV_to_MySQL.kjb
+
+Порядок выполнения:
+
+```
+START → Set Variables → Check File Exists
+    ├─ [файл есть]  → Truncate Tables
+    └─ [файла нет]  → HTTP Download → Truncate Tables
+→ Load Orders → Load Customers → Load Products
+→ Analytics Delivery → Analytics Profit → Success
+```
 
 | Шаг | Тип | Описание |
 |---|---|---|
 | **START** | Special | Точка входа |
-| **Set Variables** | Set Variables | Устанавливает переменную `CSV_FILE_PATH = /home/.../samplestore-general.csv` |
-| **Check File Exists** | File Exists | Проверяет наличие CSV-файла по пути `${CSV_FILE_PATH}` |
-| **HTTP Download** | HTTP | Скачивает CSV из GitHub если файл отсутствует |
-| **Truncate Tables** | SQL | Очищает таблицы `orders`, `customers`, `products` перед загрузкой |
+| **Set Variables** | Set Variables | Переменная `CSV_FILE_PATH = /home/god/Downloads/datain/samplestore-general.csv`, scope: JVM |
+| **Check File Exists** | File Exists | Проверяет наличие `${CSV_FILE_PATH}` |
+| **HTTP Download** | HTTP | Скачивает CSV с GitHub если файл не найден |
+| **Truncate Tables** | SQL | Очищает таблицы `orders`, `customers`, `products` |
 | **Load Orders** | Transformation | Запускает `Load_Orders.ktr` |
 | **Load Customers** | Transformation | Запускает `Load_Customers.ktr` |
 | **Load Products** | Transformation | Запускает `Load_Products.ktr` |
@@ -50,61 +102,20 @@
 | **Analytics Profit** | Transformation | Запускает `Analytics_Profit.ktr` |
 | **Success** | Success | Завершение |
 
+---
 
 ## Трансформация 1: Load Orders
 
-### Шаги
+**Файл**: `Load_Orders.ktr`
 
-**CSV file input**
-- Файл: `${CSV_FILE_PATH}`
-- Разделитель: `;`
-- Кодировка: UTF-8
-- Заголовок: первая строка
-- Поля `Order Date`, `Ship Date` читаются как `Date` с форматом `dd/MM/yyyy`
-
-**Select Values**
-
-| Поле CSV | Новое имя | Тип |
-|---|---|---|
-| Row ID | row_id | Integer |
-| Order Date | order_date | Date (dd/MM/yyyy) |
-| Ship Date | ship_date | Date (dd/MM/yyyy) |
-| Ship Mode | ship_mode | String |
-| Sales | sales | Number |
-| Quantity | quantity | Integer |
-| Discount | discount | Number |
-| Profit | profit | Number |
-| Returned | returned | String |
-| Person | person | String |
-
-**Value Mapper** — преобразование поля `returned`:
-
-| Входное значение | Выходное значение |
+| Шаг | Описание |
 |---|---|
-| `Yes` | `1` |
-| `No` | `0` |
-| *(пусто)* | `0` |
-
-**Memory Group By** — дедупликация:
-- Группировка по: `row_id`
-- Для всех остальных полей: агрегация `FIRST`
-
-> Скриншот Memory Group By:
-
-![Memory Group By](screenshots/memory_group_by_orders.png)
-
-**Filter Rows** — фильтр (вариант 17) + валидация:
-```
-order_date IS NOT NULL
-AND ship_date IS NOT NULL
-AND person = 'Kelly Williams'
-```
-- `TRUE` → Table Output → таблица `orders`
-- `FALSE` → Write to Log → запись отклонённых строк в лог
-
-> Скриншот Filter Rows:
-
-![Filter Rows](screenshots/filter_rows_orders.png)
+| **CSV file input** | Чтение `${CSV_FILE_PATH}`, разделитель `;`, кодировка UTF-8. Поля `Order Date` и `Ship Date` — тип Date, формат `dd/MM/yyyy`. |
+| **Select Values** | Переименование полей в snake_case, конвертация типов: `row_id` → Integer, даты → Date, `sales`/`discount`/`profit` → Number. |
+| **Value Mapper** | Преобразование поля `returned`: `Yes` → `1`, `No` → `0`, пустое → `0`. |
+| **Memory Group By** | Дедупликация по `row_id`, для остальных полей — агрегация `FIRST`. |
+| **Filter Rows** | Условие: `order_date IS NOT NULL AND ship_date IS NOT NULL AND person = 'Kelly Williams'`. TRUE → Table Output, FALSE → Write to Log. |
+| **Table Output** | Запись в таблицу `orders`. |
 
 ---
 
@@ -112,24 +123,13 @@ AND person = 'Kelly Williams'
 
 **Файл**: `Load_Customers.ktr`
 
-**Пайплайн**:
-```
-CSV file input
-  → Select Values (поля клиента + person)
-  → Filter Rows (person = 'Kelly Williams')
-  → Memory Group By (дедупликация по customer_id)
-  → Table Output (таблица customers)
-```
-
-**Select Values** — оставляет поля: `customer_id`, `customer_name`, `segment`, `country`, `city`, `state`, `postal_code`, `region`, `person`
-
-**Filter Rows**: `person = 'Kelly Williams'`
-
-**Memory Group By**: группировка по `customer_id`, остальные поля — `FIRST`
-
-> Скриншот Memory Group By:
-
-![Memory Group By Customers](screenshots/memory_group_by_customers.png)
+| Шаг | Описание |
+|---|---|
+| **CSV file input** | Чтение `${CSV_FILE_PATH}`, разделитель `;`, кодировка UTF-8. |
+| **Select Values** | Выбор полей: `customer_id`, `customer_name`, `segment`, `country`, `city`, `state`, `postal_code`, `region`, `person`. |
+| **Filter Rows** | Условие: `person = 'Kelly Williams'`. |
+| **Memory Group By** | Дедупликация по `customer_id`, остальные поля — `FIRST`. |
+| **Table Output** | Запись в таблицу `customers`. |
 
 ---
 
@@ -137,35 +137,29 @@ CSV file input
 
 **Файл**: `Load_Products.ktr`
 
-**Пайплайн**:
-```
-CSV file input
-  → Select Values (поля продукта + person)
-  → Filter Rows (person = 'Kelly Williams')
-  → Memory Group By (дедупликация по product_id)
-  → Table Output (таблица products)
-```
-
-**Select Values** — оставляет поля: `product_id`, `category`, `sub_category`, `product_name`, `person`
-
-**Filter Rows**: `person = 'Kelly Williams'`
-
-**Memory Group By**: группировка по `product_id`, остальные поля — `FIRST`
+| Шаг | Описание |
+|---|---|
+| **CSV file input** | Чтение `${CSV_FILE_PATH}`, разделитель `;`, кодировка UTF-8. |
+| **Select Values** | Выбор полей: `product_id`, `category`, `sub_category`, `product_name`, `person`. |
+| **Filter Rows** | Условие: `person = 'Kelly Williams'`. |
+| **Memory Group By** | Дедупликация по `product_id`, остальные поля — `FIRST`. |
+| **Table Output** | Запись в таблицу `products`. |
 
 ---
 
-## Доп. задание 1: Статистика доставки (Analytics_Delivery.ktr)
+## Доп. задание 1: Статистика доставки
 
-**Пайплайн**:
-```
-CSV file input
-  → Select Values (ship_mode, order_date, ship_date, sales, quantity)
-  → Calculator (delivery_days = ship_date - order_date)
-  → Memory Group By (группировка по ship_mode)
-  → Write to Log
-```
+**Файл**: `Analytics_Delivery.ktr`
 
-**Результат** — статистика по способам доставки:
+| Шаг | Описание |
+|---|---|
+| **CSV file input** | Чтение `${CSV_FILE_PATH}`. |
+| **Select Values** | Выбор полей: `ship_mode`, `order_date`, `ship_date`, `sales`, `quantity`. |
+| **Calculator** | Вычисление `delivery_days = ship_date - order_date` (разница в днях). |
+| **Memory Group By** | Группировка по `ship_mode`: COUNT заказов, SUM продаж, AVG дней доставки, SUM количества. |
+| **Write to Log** | Вывод результата в лог. |
+
+Результат:
 
 | ship_mode | order_count | total_sales | avg_delivery_days | total_quantity |
 |---|---|---|---|---|
@@ -176,30 +170,30 @@ CSV file input
 
 ---
 
-## Доп. задание 2: Анализ прибыли (Analytics_Profit.ktr)
+## Доп. задание 2: Анализ прибыли
 
-**Пайплайн**:
-```
-CSV file input
-  → Select Values (category, region, sales, profit, discount)
-  → Memory Group By (группировка по category + region)
-  → Write to Log
-```
+**Файл**: `Analytics_Profit.ktr`
 
-**Результат** — анализ прибыли по категориям и регионам:
+| Шаг | Описание |
+|---|---|
+| **CSV file input** | Чтение `${CSV_FILE_PATH}`. |
+| **Select Values** | Выбор полей: `category`, `region`, `sales`, `profit`, `discount`. |
+| **Memory Group By** | Группировка по `category` + `region`: COUNT, SUM прибыли, AVG прибыли, AVG скидки. |
+| **Write to Log** | Вывод результата в лог. |
+
+Результат:
 
 | category | region | order_count | total_profit | avg_profit | avg_discount |
 |---|---|---|---|---|---|
 | Furniture | West | 707 | 11504.95 | 16.27 | 0.13 |
 | Office Supplies | South | 995 | 19986.39 | 20.09 | 0.17 |
 | Technology | East | ... | ... | ... | ... |
-| ... | ... | ... | ... | ... | ... |
 
 ---
 
-## SQL-запросы проверки данных
+## Проверка данных
 
-### Количество строк в таблицах
+### Количество строк
 
 ```sql
 SELECT 'orders'    AS tbl, COUNT(*) AS cnt FROM orders
@@ -209,48 +203,32 @@ UNION ALL
 SELECT 'products'  AS tbl, COUNT(*) AS cnt FROM products;
 ```
 
-**Результат:**
-
 | tbl | cnt |
 |---|---|
 | orders | 2323 |
 | customers | 629 |
 | products | 1310 |
 
-### Проверка фильтрации по варианту (только Kelly Williams)
+### Фильтрация по варианту
 
 ```sql
 SELECT DISTINCT person FROM orders;
 SELECT DISTINCT person FROM customers;
 SELECT DISTINCT person FROM products;
--- Результат во всех трёх: Kelly Williams
+-- Во всех трёх таблицах: Kelly Williams
 ```
 
-### Примеры данных из таблицы orders
+### Дедупликация
 
 ```sql
-SELECT * FROM orders LIMIT 5;
-```
-
-| row_id | order_date | ship_date | ship_mode | sales | quantity | discount | profit | returned | person |
-|---|---|---|---|---|---|---|---|---|---|
-| 15 | 2017-11-22 | 2017-11-26 | Standard Class | 68.81 | 5 | 0.80 | -123.86 | 0 | Kelly Williams |
-| 16 | 2017-11-22 | 2017-11-26 | Standard Class | 2.54 | 3 | 0.80 | -3.82 | 0 | Kelly Williams |
-| 17 | 2016-11-11 | 2016-11-18 | Standard Class | 665.88 | 6 | 0.00 | 13.32 | 0 | Kelly Williams |
-
-### Проверка дедупликации
-
-```sql
--- Дубликатов нет: row_id уникален
 SELECT row_id, COUNT(*) AS cnt FROM orders GROUP BY row_id HAVING cnt > 1;
--- Результат: 0 строк
+-- 0 строк
 
--- Дубликатов нет: customer_id уникален
 SELECT customer_id, COUNT(*) AS cnt FROM customers GROUP BY customer_id HAVING cnt > 1;
--- Результат: 0 строк
+-- 0 строк
 ```
 
-### Проверка маппинга returned
+### Маппинг returned
 
 ```sql
 SELECT returned, COUNT(*) AS cnt FROM orders GROUP BY returned;
@@ -261,13 +239,14 @@ SELECT returned, COUNT(*) AS cnt FROM orders GROUP BY returned;
 | 0 | 2231 |
 | 1 | 92 |
 
-### Проверка корректности дат
+### Корректность дат
 
 ```sql
 SELECT MIN(order_date), MAX(order_date) FROM orders;
--- Результат: 2014-01-06 / 2017-12-30
+-- 2014-01-06 / 2017-12-30
+
 SELECT COUNT(*) FROM orders WHERE order_date IS NULL OR ship_date IS NULL;
--- Результат: 0
+-- 0
 ```
 
 ### Статистика по способам доставки
@@ -292,12 +271,12 @@ ORDER BY cnt DESC;
 
 | Критерий | Выполнено |
 |---|---|
-| Динамическое скачивание файла (HTTP) | ✅ |
-| Переменная среды (Set Variables) | ✅ |
-| Нормализация на 3 таблицы | ✅ |
-| Дедупликация (Memory Group By) | ✅ |
-| Обработка ошибок (Filter Rows + Write to Log) | ✅ |
-| Фильтр по варианту (Person = Kelly Williams) | ✅ |
-| Маппинг Returned → 0/1 (Value Mapper) | ✅ |
-| Доп. задание 1: Статистика доставки | ✅ |
-| Доп. задание 2: Анализ прибыли | ✅ |
+| Динамическое скачивание файла (HTTP) | Да |
+| Переменная среды (Set Variables) | Да |
+| Нормализация на 3 таблицы | Да |
+| Дедупликация (Memory Group By) | Да |
+| Обработка ошибок (Filter Rows + Write to Log) | Да |
+| Фильтр по варианту (Person = Kelly Williams) | Да |
+| Маппинг Returned → 0/1 (Value Mapper) | Да |
+| Доп. задание 1: Статистика доставки | Да |
+| Доп. задание 2: Анализ прибыли | Да |
