@@ -10,83 +10,35 @@
 
 ---
 
-## Структура репозитория
+### 1. Подготовка базы данных
 
-```
-lab2/
-├── CSV_to_MySQL.kjb          # Главный Job
-├── Load_Orders.ktr           # Трансформация: загрузка заказов
-├── Load_Customers.ktr        # Трансформация: загрузка клиентов
-├── Load_Products.ktr         # Трансформация: загрузка продуктов
-├── Analytics_Delivery.ktr    # Доп. задание 1: статистика доставки
-├── Analytics_Profit.ktr      # Доп. задание 2: анализ прибыли
-└── README.md
-```
+<img width="778" height="158" alt="image" src="https://github.com/user-attachments/assets/6a3f30f2-e5fd-4e7d-85eb-4455723f47ee" />
 
+<img width="779" height="156" alt="image" src="https://github.com/user-attachments/assets/e62c469d-e22b-4d9a-80b2-2650b05e0522" />
+
+<img width="782" height="147" alt="image" src="https://github.com/user-attachments/assets/6488ec92-9f97-4380-ad14-163babc3bbdf" />
 ---
 
-## Техническое окружение
+### 2. Настройка Job (Главного задания)
 
-- **ETL**: Pentaho Data Integration 9.4
-- **СУБД**: MySQL 8.0 (удалённый сервер `95.131.149.21:3306`)
-- **БД**: `mgpu_ico_etl_17`
-- **Исходные данные**: `samplestore-general.csv` (~10 000 строк, разделитель `;`)
-- **ОС**: Ubuntu 22.04, Java OpenJDK 11
+**Файл**: `CSV_to_MySQL.kjb`
 
----
+Создаем Job (CSV_to_MySQL.kjb), который управляет всем процессом
+<img width="1319" height="629" alt="image" src="https://github.com/user-attachments/assets/07720850-2129-498f-a17e-790bac76039f" />
 
-## Структура базы данных
+2.1 Set Variables: Создаем переменную пути к файлу.
+<img width="755" height="384" alt="image" src="https://github.com/user-attachments/assets/3cf3665a-6324-406d-87a2-2c91020e6d89" />
 
-```sql
-CREATE TABLE orders (
-    row_id      INT PRIMARY KEY,
-    order_date  DATE,
-    ship_date   DATE,
-    ship_mode   VARCHAR(50),
-    sales       DECIMAL(10,2),
-    quantity    INT,
-    discount    DECIMAL(4,2),
-    profit      DECIMAL(10,2),
-    returned    TINYINT(1) DEFAULT 0,
-    person      VARCHAR(100)
-);
+2.2 Check File Exists: Проверка наличия файла ${CSV_FILE_PATH}.
+<img width="336" height="151" alt="image" src="https://github.com/user-attachments/assets/a948c3fd-2b50-4fa4-a5a3-ef8b594733b7" />
 
-CREATE TABLE customers (
-    id            INT AUTO_INCREMENT PRIMARY KEY,
-    customer_id   VARCHAR(20) NOT NULL,
-    customer_name VARCHAR(100),
-    segment       VARCHAR(50),
-    country       VARCHAR(100),
-    city          VARCHAR(100),
-    state         VARCHAR(100),
-    postal_code   VARCHAR(20),
-    region        VARCHAR(50),
-    person        VARCHAR(100)
-);
+2.3 HTTP (Download): Загрузка файла, если его нет.
+<img width="1115" height="802" alt="image" src="https://github.com/user-attachments/assets/af27fe85-c9f3-43e4-8afd-b83047b27af2" />
 
-CREATE TABLE products (
-    id            INT AUTO_INCREMENT PRIMARY KEY,
-    product_id    VARCHAR(20) NOT NULL,
-    category      VARCHAR(50),
-    sub_category  VARCHAR(50),
-    product_name  VARCHAR(255),
-    person        VARCHAR(100)
-);
-```
-
----
-
-## Job: CSV_to_MySQL.kjb
-
-Порядок выполнения:
-
-```
-START → Set Variables → Check File Exists
-    ├─ [файл есть]  → Truncate Tables
-    └─ [файла нет]  → HTTP Download → Truncate Tables
-→ Load Orders → Load Customers → Load Products
-→ Analytics Delivery → Analytics Profit → Success
-```
+2.4 Transformation. Последовательный вызов трех трансформаций для загрузки данных.
+<img width="744" height="711" alt="image" src="https://github.com/user-attachments/assets/95581a0f-8a31-4f65-93ed-467775b2faef" />
+<img width="744" height="718" alt="image" src="https://github.com/user-attachments/assets/7d2c8399-4dfc-462e-9eda-4efeecf8a617" />
+<img width="745" height="711" alt="image" src="https://github.com/user-attachments/assets/85b87a2e-f127-468f-9a05-534bbefaf8b8" />
 
 | Шаг | Тип | Описание |
 |---|---|---|
@@ -108,6 +60,8 @@ START → Set Variables → Check File Exists
 
 **Файл**: `Load_Orders.ktr`
 
+<img width="998" height="771" alt="image" src="https://github.com/user-attachments/assets/d111f117-3a33-4db8-823f-2c680ac4cbbe" />
+
 | Шаг | Описание |
 |---|---|
 | **CSV file input** | Чтение `${CSV_FILE_PATH}`, разделитель `;`, кодировка UTF-8. Поля `Order Date` и `Ship Date` — тип Date, формат `dd/MM/yyyy`. |
@@ -123,6 +77,8 @@ START → Set Variables → Check File Exists
 
 **Файл**: `Load_Customers.ktr`
 
+<img width="971" height="564" alt="image" src="https://github.com/user-attachments/assets/3801d6db-f387-4c11-a3e6-bff07cd8010b" />
+
 | Шаг | Описание |
 |---|---|
 | **CSV file input** | Чтение `${CSV_FILE_PATH}`, разделитель `;`, кодировка UTF-8. |
@@ -137,6 +93,8 @@ START → Set Variables → Check File Exists
 
 **Файл**: `Load_Products.ktr`
 
+<img width="969" height="563" alt="image" src="https://github.com/user-attachments/assets/ff1f2a7e-b922-4615-910a-6dc7403ad6d5" />
+
 | Шаг | Описание |
 |---|---|
 | **CSV file input** | Чтение `${CSV_FILE_PATH}`, разделитель `;`, кодировка UTF-8. |
@@ -150,6 +108,8 @@ START → Set Variables → Check File Exists
 ## Доп. задание 1: Статистика доставки
 
 **Файл**: `Analytics_Delivery.ktr`
+
+<img width="946" height="566" alt="image" src="https://github.com/user-attachments/assets/7aa089de-55da-475f-a105-4ffa41acfb7f" />
 
 | Шаг | Описание |
 |---|---|
@@ -174,6 +134,8 @@ START → Set Variables → Check File Exists
 
 **Файл**: `Analytics_Profit.ktr`
 
+<img width="977" height="553" alt="image" src="https://github.com/user-attachments/assets/455cc967-4982-433c-8ae4-db18534e41a1" />
+
 | Шаг | Описание |
 |---|---|
 | **CSV file input** | Чтение `${CSV_FILE_PATH}`. |
@@ -195,88 +157,37 @@ START → Set Variables → Check File Exists
 
 ### Количество строк
 
-```sql
-SELECT 'orders'    AS tbl, COUNT(*) AS cnt FROM orders
-UNION ALL
-SELECT 'customers' AS tbl, COUNT(*) AS cnt FROM customers
-UNION ALL
-SELECT 'products'  AS tbl, COUNT(*) AS cnt FROM products;
-```
-
-| tbl | cnt |
-|---|---|
-| orders | 2323 |
-| customers | 629 |
-| products | 1310 |
+<img width="1377" height="332" alt="image" src="https://github.com/user-attachments/assets/dc04833f-9fc6-4073-892b-34dee278d708" />
 
 ### Фильтрация по варианту
 
-```sql
-SELECT DISTINCT person FROM orders;
-SELECT DISTINCT person FROM customers;
-SELECT DISTINCT person FROM products;
--- Во всех трёх таблицах: Kelly Williams
-```
+<img width="603" height="895" alt="image" src="https://github.com/user-attachments/assets/256f6524-029d-4ea3-98ec-bad60e849cb9" />
+
+<img width="606" height="277" alt="image" src="https://github.com/user-attachments/assets/28383e7f-5819-4998-8bc5-a2e126a3c3e9" />
+
 
 ### Дедупликация
 
-```sql
-SELECT row_id, COUNT(*) AS cnt FROM orders GROUP BY row_id HAVING cnt > 1;
--- 0 строк
+<img width="621" height="160" alt="image" src="https://github.com/user-attachments/assets/f0b53852-4984-4e34-8892-5ce62785a7c2" />
 
-SELECT customer_id, COUNT(*) AS cnt FROM customers GROUP BY customer_id HAVING cnt > 1;
--- 0 строк
-```
+<img width="724" height="157" alt="image" src="https://github.com/user-attachments/assets/1f585e67-b095-44d1-9540-ff3a5e9975d9" />
+
 
 ### Маппинг returned
 
-```sql
-SELECT returned, COUNT(*) AS cnt FROM orders GROUP BY returned;
-```
+<img width="525" height="298" alt="image" src="https://github.com/user-attachments/assets/e9e18a97-c134-4984-9800-0a986cb45fd8" />
 
-| returned | cnt |
-|---|---|
-| 0 | 2231 |
-| 1 | 92 |
 
 ### Корректность дат
 
-```sql
-SELECT MIN(order_date), MAX(order_date) FROM orders;
--- 2014-01-06 / 2017-12-30
+<img width="496" height="279" alt="image" src="https://github.com/user-attachments/assets/8e0a3c80-d732-49b6-b9c0-237b14664e4d" />
 
-SELECT COUNT(*) FROM orders WHERE order_date IS NULL OR ship_date IS NULL;
--- 0
-```
+<img width="617" height="212" alt="image" src="https://github.com/user-attachments/assets/47a895a0-1620-4b85-9486-8a698ee9d3d8" />
+
 
 ### Статистика по способам доставки
 
-```sql
-SELECT ship_mode, COUNT(*) AS cnt, ROUND(AVG(profit), 2) AS avg_profit
-FROM orders
-GROUP BY ship_mode
-ORDER BY cnt DESC;
-```
-
-| ship_mode | cnt | avg_profit |
-|---|---|---|
-| Standard Class | 1439 | 17.62 |
-| Second Class | 465 | 19.60 |
-| First Class | 299 | 12.40 |
-| Same Day | 120 | 12.77 |
+<img width="975" height="345" alt="image" src="https://github.com/user-attachments/assets/337b1293-dd2c-4799-b940-9d642ce58b99" />
 
 ---
 
-## Итоги
-
-| Критерий | Выполнено |
-|---|---|
-| Динамическое скачивание файла (HTTP) | Да |
-| Переменная среды (Set Variables) | Да |
-| Нормализация на 3 таблицы | Да |
-| Дедупликация (Memory Group By) | Да |
-| Обработка ошибок (Filter Rows + Write to Log) | Да |
-| Фильтр по варианту (Person = Kelly Williams) | Да |
-| Маппинг Returned → 0/1 (Value Mapper) | Да |
-| Доп. задание 1: Статистика доставки | Да |
-| Доп. задание 2: Анализ прибыли | Да |
