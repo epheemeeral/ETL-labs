@@ -126,7 +126,7 @@
 
 **Файл**: `Analytics_Profit.ktr`
 
-<img width="977" height="553" alt="image" src="https://github.com/user-attachments/assets/455cc967-4982-433c-8ae4-db18534e41a1" />
+<img width="953" height="587" alt="image" src="https://github.com/user-attachments/assets/85ff3efb-edcf-45fe-9f4e-5f616e2e8783" />
 
 | Шаг | Описание |
 |---|---|
