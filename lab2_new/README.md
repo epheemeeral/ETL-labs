@@ -175,5 +175,9 @@
 
 <img width="975" height="345" alt="image" src="https://github.com/user-attachments/assets/337b1293-dd2c-4799-b940-9d642ce58b99" />
 
+### Статистика по прибыли
+
+<img width="1128" height="385" alt="image" src="https://github.com/user-attachments/assets/65b1528a-3d78-48dc-bece-4fa7aef0b9b4" />
+
 ---
 
