@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transformation>
+  <info>
+    <name>Load_Orders</name>
+    <description>Load orders from CSV to MySQL (Variant 17: Person = Kelly Williams)</description>
+    <extended_description/>
+    <trans_version/>
+    <trans_type>Normal</trans_type>
+    <trans_status>0</trans_status>
+    <directory>/</directory>
+    <parameters/>
+    <log>
+      <trans-log-table><connection/><schema/><table/><size_limit_lines/><interval/><timeout_days/><field/></trans-log-table>
+      <perf-log-table><connection/><schema/><table/><interval/><timeout_days/><field/></perf-log-table>
+      <channel-log-table><connection/><schema/><table/><timeout_days/><field/></channel-log-table>
+      <step-log-table><connection/><schema/><table/><timeout_days/><field/></step-log-table>
+      <metrics-log-table><connection/><schema/><table/><timeout_days/><field/></metrics-log-table>
+    </log>
+    <maxdate><connection/><table/><field/><offset>0.0</offset><maxdiff>0.0</maxdiff></maxdate>
+    <size_rowset>10000</size_rowset>
+    <sleep_time_empty>50</sleep_time_empty>
+    <sleep_time_full>50</sleep_time_full>
+    <unique_connections>N</unique_connections>
+    <feedback_shown>Y</feedback_shown>
+    <feedback_size>50000</feedback_size>
+    <using_thread_priorities>Y</using_thread_priorities>
+    <shared_objects_file/>
+    <capture_step_performance>N</capture_step_performance>
+    <step_performance_capturing_delay>1000</step_performance_capturing_delay>
+    <step_performance_capturing_size_limit>100</step_performance_capturing_size_limit>
+    <dependencies/>
+    <partitionschemas/>
+    <slaveservers/>
+    <clusterschemas/>
+    <created_user>-</created_user>
+    <created_date>2026/04/04 23:00:00.000</created_date>
+    <modified_user>-</modified_user>
+    <modified_date>2026/04/04 23:00:00.000</modified_date>
+    <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
+    <is_key_private>N</is_key_private>
+  </info>
+  <notepads/>
+  <connection>
+    <name>MySQL_Target</name>
+    <server>95.131.149.21</server>
+    <type>MYSQL</type>
+    <access>Native</access>
+    <database>mgpu_ico_etl_17</database>
+    <port>3306</port>
+    <username>mgpu_ico_etl_17</username>
+    <password>Encrypted 2be98afc86aa7f2e480418a41ffb99bd9</password>
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
+    <attributes>
+      <attribute><code>FORCE_IDENTIFIERS_TO_LOWERCASE</code><attribute>N</attribute></attribute>
+      <attribute><code>FORCE_IDENTIFIERS_TO_UPPERCASE</code><attribute>N</attribute></attribute>
+      <attribute><code>IS_CLUSTERED</code><attribute>N</attribute></attribute>
+      <attribute><code>PORT_NUMBER</code><attribute>3306</attribute></attribute>
+      <attribute><code>PRESERVE_RESERVED_WORD_CASE</code><attribute>Y</attribute></attribute>
+      <attribute><code>QUOTE_ALL_FIELDS</code><attribute>N</attribute></attribute>
+      <attribute><code>SUPPORTS_BOOLEAN_DATA_TYPE</code><attribute>Y</attribute></attribute>
+      <attribute><code>SUPPORTS_TIMESTAMP_DATA_TYPE</code><attribute>Y</attribute></attribute>
+      <attribute><code>USE_POOLING</code><attribute>N</attribute></attribute>
+      <attribute><code>EXTRA_OPTION_MYSQL.allowPublicKeyRetrieval</code><attribute>true</attribute></attribute>
+    </attributes>
+  </connection>
+  <order>
+    <hop><from>CSV file input</from><to>Select values</to><enabled>Y</enabled></hop>
+    <hop><from>Select values</from><to>Value Mapper</to><enabled>Y</enabled></hop>
+    <hop><from>Value Mapper</from><to>Memory Group by</to><enabled>Y</enabled></hop>
+    <hop><from>Memory Group by</from><to>Filter rows</to><enabled>Y</enabled></hop>
+    <hop><from>Filter rows</from><to>Table output</to><enabled>Y</enabled></hop>
+    <hop><from>Filter rows</from><to>Write to log</to><enabled>Y</enabled></hop>
+  </order>
+
+  <step>
+    <name>CSV file input</name>
+    <type>CsvInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribute/>
+    <copies>1</copies>
+    <partitioning><method>none</method><schema_name/></partitioning>
+    <filename>${CSV_FILE_PATH}</filename>
+    <filename_field/>
+    <rownum_field/>
+    <include_filename>N</include_filename>
+    <separator>;</separator>
+    <enclosure>"</enclosure>
+    <header>Y</header>
+    <buffer_size>50000</buffer_size>
+    <lazy_conversion>N</lazy_conversion>
+    <add_filename_result>N</add_filename_result>
+    <parallel>N</parallel>
+    <newline_possible>N</newline_possible>
+    <encoding>UTF-8</encoding>
+    <fields>
+      <field><name>Row ID</name><type>String</type><format/><currency/><decimal>.</decimal><group/><length/><precision/><trim_type>none</trim_type></field>
+      <field><name>Order ID</name><type>String</type><format/><currency/><decimal/><group/><length/><precision/><trim_type>none</trim_type></field>
+      <field><name>Order Date</name><type>Date</type><format>dd/MM/yyyy</format><currency/><decimal/><group/><length/><precision/><trim_type>none</trim_type></field>
+      <field><name>Ship Date</name><type>Date</type><format>dd/MM/yyyy</format><currency/><decimal/><group/><length/><precision/><trim_type>none</trim_type></field>
+      <field><name>Ship Mode</name><type>String</type><format/><currency/><decimal/><group/><length/><precision/><trim_type>none</trim_type></field>
+      <field><name>Customer ID</name><type>String</type><format/><currency/><decimal/><group/><length/><precision/><trim_type>none</trim_type></field>
+      <field><name>Customer Name</name><type>String</type><format/><currency/><decimal/><group/><length/><precision/><trim_type>none</trim_type></field>
+      <field><name>Segment</name><type>String</type><format/><currency/><decimal/><group/><length/><precision/><trim_type>none</trim_type></field>
+      <field><name>Country</name><type>String</type><format/><currency/><decimal/><group/><length/><precision/><trim_type>none</trim_type></field>
+      <field><name>City</name><type>String</type><format/><currency/><decimal/><group/><length/><precision/><trim_type>none</trim_type></field>
+      <field><name>State</name><type>String</type><format/><currency/><decimal/><group/><length/><precision/><trim_type>none</trim_type></field>
+      <field><name>Postal Code</name><type>String</type><format/><currency/><decimal/><group/><length/><precision/><trim_type>none</trim_type></field>
+      <field><name>Region</name><type>String</type><format/><currency/><decimal/><group/><length/><precision/><trim_type>none</trim_type></field>
+      <field><name>Product ID</name><type>String</type><format/><currency/><decimal/><group/><length/><precision/><trim_type>none</trim_type></field>
+      <field><name>Category</name><type>String</type><format/><currency/><decimal/><group/><length/><precision/><trim_type>none</trim_type></field>
+      <field><name>Sub-Category</name><type>String</type><format/><currency/><decimal/><group/><length/><precision/><trim_type>none</trim_type></field>
+      <field><name>Product Name</name><type>String</type><format/><currency/><decimal/><group/><length/><precision/><trim_type>none</trim_type></field>
+      <field><name>Sales</name><type>String</type><format/><currency/><decimal>.</decimal><group/><length/><precision/><trim_type>none</trim_type></field>
+      <field><name>Quantity</name><type>String</type><format/><currency/><decimal/><group/><length/><precision/><trim_type>none</trim_type></field>
+      <field><name>Discount</name><type>String</type><format/><currency/><decimal>.</decimal><group/><length/><precision/><trim_type>none</trim_type></field>
+      <field><name>Profit</name><type>String</type><format/><currency/><decimal>.</decimal><group/><length/><precision/><trim_type>none</trim_type></field>
+      <field><name>Returned</name><type>String</type><format/><currency/><decimal/><group/><length/><precision/><trim_type>none</trim_type></field>
+      <field><name>Person</name><type>String</type><format/><currency/><decimal/><group/><length/><precision/><trim_type>none</trim_type></field>
+    </fields>
+    <cluster_schema/>
+    <remotesteps><input/><output/></remotesteps>
+    <GUI><xloc>100</xloc><yloc>200</yloc><draw>Y</draw></GUI>
+  </step>
+
+  <step>
+    <name>Select values</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribute/>
+    <copies>1</copies>
+    <partitioning><method>none</method><schema_name/></partitioning>
+    <fields>
+      <field><name>Row ID</name><rename>row_id</rename><length>-2</length><precision>-2</precision></field>
+      <field><name>Order Date</name><rename>order_date</rename><length>-2</length><precision>-2</precision></field>
+      <field><name>Ship Date</name><rename>ship_date</rename><length>-2</length><precision>-2</precision></field>
+      <field><name>Ship Mode</name><rename>ship_mode</rename><length>-2</length><precision>-2</precision></field>
+      <field><name>Sales</name><rename>sales</rename><length>-2</length><precision>-2</precision></field>
+      <field><name>Quantity</name><rename>quantity</rename><length>-2</length><precision>-2</precision></field>
+      <field><name>Discount</name><rename>discount</rename><length>-2</length><precision>-2</precision></field>
+      <field><name>Profit</name><rename>profit</rename><length>-2</length><precision>-2</precision></field>
+      <field><name>Returned</name><rename>returned</rename><length>-2</length><precision>-2</precision></field>
+      <field><name>Person</name><rename>person</rename><length>-2</length><precision>-2</precision></field>
+    </fields>
+    <select_unspecified>N</select_unspecified>
+    <meta>
+      <name>row_id</name><rename/><type>Integer</type><length>-2</length><precision>0</precision><conversion_mask>#</conversion_mask><date_format_lenient>false</date_format_lenient><date_format_locale/><date_format_timezone/><lenient_string_to_number>N</lenient_string_to_number><encoding/><decimal_symbol>.</decimal_symbol><grouping_symbol>,</grouping_symbol><currency_symbol/><storage_type/>
+    </meta>
+    <meta>
+      <name>order_date</name><rename/><type>Date</type><length>-2</length><precision>-2</precision><conversion_mask/><date_format_lenient>false</date_format_lenient><date_format_locale/><date_format_timezone/><lenient_string_to_number>N</lenient_string_to_number><encoding/><decimal_symbol/><grouping_symbol/><currency_symbol/><storage_type/>
+    </meta>
+    <meta>
+      <name>ship_date</name><rename/><type>Date</type><length>-2</length><precision>-2</precision><conversion_mask/><date_format_lenient>false</date_format_lenient><date_format_locale/><date_format_timezone/><lenient_string_to_number>N</lenient_string_to_number><encoding/><decimal_symbol/><grouping_symbol/><currency_symbol/><storage_type/>
+    </meta>
+    <meta>
+      <name>ship_mode</name><rename/><type>String</type><length>50</length><precision>-2</precision><conversion_mask/><date_format_lenient>false</date_format_lenient><date_format_locale/><date_format_timezone/><lenient_string_to_number>N</lenient_string_to_number><encoding/><decimal_symbol/><grouping_symbol/><currency_symbol/><storage_type/>
+    </meta>
+    <meta>
+      <name>sales</name><rename/><type>Number</type><length>10</length><precision>2</precision><conversion_mask>#.##</conversion_mask><date_format_lenient>false</date_format_lenient><date_format_locale/><date_format_timezone/><lenient_string_to_number>Y</lenient_string_to_number><encoding/><decimal_symbol>.</decimal_symbol><grouping_symbol/><currency_symbol/><storage_type/>
+    </meta>
+    <meta>
+      <name>quantity</name><rename/><type>Integer</type><length>-2</length><precision>0</precision><conversion_mask>#.#</conversion_mask><date_format_lenient>false</date_format_lenient><date_format_locale/><date_format_timezone/><lenient_string_to_number>Y</lenient_string_to_number><encoding/><decimal_symbol>.</decimal_symbol><grouping_symbol/><currency_symbol/><storage_type/>
+    </meta>
+    <meta>
+      <name>discount</name><rename/><type>Number</type><length>4</length><precision>2</precision><conversion_mask>#.##</conversion_mask><date_format_lenient>false</date_format_lenient><date_format_locale/><date_format_timezone/><lenient_string_to_number>Y</lenient_string_to_number><encoding/><decimal_symbol>.</decimal_symbol><grouping_symbol/><currency_symbol/><storage_type/>
+    </meta>
+    <meta>
+      <name>profit</name><rename/><type>Number</type><length>10</length><precision>2</precision><conversion_mask>#.##</conversion_mask><date_format_lenient>false</date_format_lenient><date_format_locale/><date_format_timezone/><lenient_string_to_number>Y</lenient_string_to_number><encoding/><decimal_symbol>.</decimal_symbol><grouping_symbol/><currency_symbol/><storage_type/>
+    </meta>
+    <meta>
+      <name>returned</name><rename/><type>String</type><length>10</length><precision>-2</precision><conversion_mask/><date_format_lenient>false</date_format_lenient><date_format_locale/><date_format_timezone/><lenient_string_to_number>N</lenient_string_to_number><encoding/><decimal_symbol/><grouping_symbol/><currency_symbol/><storage_type/>
+    </meta>
+    <meta>
+      <name>person</name><rename/><type>String</type><length>100</length><precision>-2</precision><conversion_mask/><date_format_lenient>false</date_format_lenient><date_format_locale/><date_format_timezone/><lenient_string_to_number>N</lenient_string_to_number><encoding/><decimal_symbol/><grouping_symbol/><currency_symbol/><storage_type/>
+    </meta>
+    <cluster_schema/>
+    <remotesteps><input/><output/></remotesteps>
+    <GUI><xloc>280</xloc><yloc>200</yloc><draw>Y</draw></GUI>
+  </step>
+
+  <step>
+    <name>Value Mapper</name>
+    <type>ValueMapper</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribute/>
+    <copies>1</copies>
+    <partitioning><method>none</method><schema_name/></partitioning>
+    <field_to_use>returned</field_to_use>
+    <target_field>returned_flag</target_field>
+    <non_match_default>0</non_match_default>
+    <fields>
+      <field><source_value>Yes</source_value><target_value>1</target_value></field>
+      <field><source_value>No</source_value><target_value>0</target_value></field>
+      <field><source_value/><target_value>0</target_value></field>
+    </fields>
+    <cluster_schema/>
+    <remotesteps><input/><output/></remotesteps>
+    <GUI><xloc>460</xloc><yloc>200</yloc><draw>Y</draw></GUI>
+  </step>
+
+  <step>
+    <name>Memory Group by</name>
+    <type>MemoryGroupBy</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribute/>
+    <copies>1</copies>
+    <partitioning><method>none</method><schema_name/></partitioning>
+    <give_back_row>N</give_back_row>
+    <group>
+      <field><name>row_id</name></field>
+    </group>
+    <fields>
+      <field><aggregate>order_date</aggregate><subject>order_date</subject><type>FIRST</type><valuefield/></field>
+      <field><aggregate>ship_date</aggregate><subject>ship_date</subject><type>FIRST</type><valuefield/></field>
+      <field><aggregate>ship_mode</aggregate><subject>ship_mode</subject><type>FIRST</type><valuefield/></field>
+      <field><aggregate>sales</aggregate><subject>sales</subject><type>FIRST</type><valuefield/></field>
+      <field><aggregate>quantity</aggregate><subject>quantity</subject><type>FIRST</type><valuefield/></field>
+      <field><aggregate>discount</aggregate><subject>discount</subject><type>FIRST</type><valuefield/></field>
+      <field><aggregate>profit</aggregate><subject>profit</subject><type>FIRST</type><valuefield/></field>
+      <field><aggregate>returned_flag</aggregate><subject>returned_flag</subject><type>FIRST</type><valuefield/></field>
+      <field><aggregate>person</aggregate><subject>person</subject><type>FIRST</type><valuefield/></field>
+    </fields>
+    <cluster_schema/>
+    <remotesteps><input/><output/></remotesteps>
+    <GUI><xloc>640</xloc><yloc>200</yloc><draw>Y</draw></GUI>
+  </step>
+
+  <step>
+    <name>Filter rows</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribute/>
+    <copies>1</copies>
+    <partitioning><method>none</method><schema_name/></partitioning>
+    <send_true_to>Table output</send_true_to>
+    <send_false_to>Write to log</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue/>
+        <function>-</function>
+        <rightvalue/>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>order_date</leftvalue>
+            <function>IS NOT NULL</function>
+            <rightvalue/>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>ship_date</leftvalue>
+            <function>IS NOT NULL</function>
+            <rightvalue/>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>person</leftvalue>
+            <function>=</function>
+            <rightvalue/>
+            <value><name>constant</name><type>String</type><text>Kelly Williams</text><length>-1</length><precision>-1</precision><isnull>N</isnull><mask/></value>
+          </condition>
+        </conditions>
+      </condition>
+    </compare>
+    <cluster_schema/>
+    <remotesteps><input/><output/></remotesteps>
+    <GUI><xloc>820</xloc><yloc>200</yloc><draw>Y</draw></GUI>
+  </step>
+
+  <step>
+    <name>Table output</name>
+    <type>TableOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribute/>
+    <copies>1</copies>
+    <partitioning><method>none</method><schema_name/></partitioning>
+    <connection>MySQL_Target</connection>
+    <schema/>
+    <table>orders</table>
+    <commit>1000</commit>
+    <truncate>N</truncate>
+    <ignore_errors>N</ignore_errors>
+    <use_batch>Y</use_batch>
+    <specify_fields>Y</specify_fields>
+    <partitioning_enabled>N</partitioning_enabled>
+    <partitioning_field/>
+    <partitioning_daily>N</partitioning_daily>
+    <partitioning_monthly>Y</partitioning_monthly>
+    <tablename_in_field>N</tablename_in_field>
+    <tablename_field/>
+    <tablename_in_table>Y</tablename_in_table>
+    <return_keys>N</return_keys>
+    <return_field/>
+    <fields>
+      <field><column_name>row_id</column_name><stream_name>row_id</stream_name></field>
+      <field><column_name>order_date</column_name><stream_name>order_date</stream_name></field>
+      <field><column_name>ship_date</column_name><stream_name>ship_date</stream_name></field>
+      <field><column_name>ship_mode</column_name><stream_name>ship_mode</stream_name></field>
+      <field><column_name>sales</column_name><stream_name>sales</stream_name></field>
+      <field><column_name>quantity</column_name><stream_name>quantity</stream_name></field>
+      <field><column_name>discount</column_name><stream_name>discount</stream_name></field>
+      <field><column_name>profit</column_name><stream_name>profit</stream_name></field>
+      <field><column_name>returned</column_name><stream_name>returned_flag</stream_name></field>
+      <field><column_name>person</column_name><stream_name>person</stream_name></field>
+    </fields>
+    <cluster_schema/>
+    <remotesteps><input/><output/></remotesteps>
+    <GUI><xloc>1020</xloc><yloc>150</yloc><draw>Y</draw></GUI>
+  </step>
+
+  <step>
+    <name>Write to log</name>
+    <type>WriteToLog</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribute/>
+    <copies>1</copies>
+    <partitioning><method>none</method><schema_name/></partitioning>
+    <loglevel>log_level_basic</loglevel>
+    <displayHeader>Y</displayHeader>
+    <limitRows>N</limitRows>
+    <limitRowsNumber>0</limitRowsNumber>
+    <logmessage>REJECTED ROW (NULL date or wrong Person)</logmessage>
+    <fields>
+      <field><name>row_id</name></field>
+      <field><name>order_date</name></field>
+      <field><name>ship_date</name></field>
+      <field><name>person</name></field>
+    </fields>
+    <cluster_schema/>
+    <remotesteps><input/><output/></remotesteps>
+    <GUI><xloc>1020</xloc><yloc>320</yloc><draw>Y</draw></GUI>
+  </step>
+
+</transformation>
