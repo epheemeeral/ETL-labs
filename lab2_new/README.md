@@ -119,14 +119,6 @@
 | **Memory Group By** | Группировка по `ship_mode`: COUNT заказов, SUM продаж, AVG дней доставки, SUM количества. |
 | **Write to Log** | Вывод результата в лог. |
 
-Результат:
-
-| ship_mode | order_count | total_sales | avg_delivery_days | total_quantity |
-|---|---|---|---|---|
-| Standard Class | 1439 | ... | 5.0 | ... |
-| Second Class | 465 | ... | 3.0 | ... |
-| First Class | 299 | ... | 2.0 | ... |
-| Same Day | 120 | ... | 0.0 | ... |
 
 ---
 
@@ -142,14 +134,6 @@
 | **Select Values** | Выбор полей: `category`, `region`, `sales`, `profit`, `discount`. |
 | **Memory Group By** | Группировка по `category` + `region`: COUNT, SUM прибыли, AVG прибыли, AVG скидки. |
 | **Write to Log** | Вывод результата в лог. |
-
-Результат:
-
-| category | region | order_count | total_profit | avg_profit | avg_discount |
-|---|---|---|---|---|---|
-| Furniture | West | 707 | 11504.95 | 16.27 | 0.13 |
-| Office Supplies | South | 995 | 19986.39 | 20.09 | 0.17 |
-| Technology | East | ... | ... | ... | ... |
 
 ---
 
