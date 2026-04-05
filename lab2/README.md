@@ -45,7 +45,7 @@
 | **Set Variables** | Set Variables | Переменная `CSV_FILE_PATH = /home/god/Downloads/datain/samplestore-general.csv`, scope: JVM |
 | **Check File Exists** | File Exists | Проверяет наличие `${CSV_FILE_PATH}` |
 | **HTTP Download** | HTTP | Скачивает CSV с GitHub если файл не найден |
-| **Truncate Tables** | SQL | Очищает таблицы `orders`, `customers`, `products` |
+| **Truncate Tables** | SQL | Очищает таблицы `orders`, `customers`, `products`, `analytics_profit` |
 | **Load Orders** | Transformation | Запускает `Load_Orders.ktr` |
 | **Load Customers** | Transformation | Запускает `Load_Customers.ktr` |
 | **Load Products** | Transformation | Запускает `Load_Products.ktr` |
@@ -132,7 +132,8 @@
 |---|---|
 | **CSV file input** | Чтение `${CSV_FILE_PATH}`. |
 | **Select Values** | Выбор полей: `category`, `region`, `sales`, `profit`, `discount`. |
-| **Memory Group By** | Группировка по `category` + `region`: COUNT, SUM прибыли, AVG прибыли, AVG скидки. |
+| **Memory Group By** | Группировка по `category` + `region`: COUNT, SUM продаж, SUM прибыли, AVG прибыли, AVG скидки, MIN/MAX прибыли. |
+| **Table Output** | Запись результата в таблицу `analytics_profit`. |
 | **Write to Log** | Вывод результата в лог. |
 
 <img width="639" height="742" alt="image" src="https://github.com/user-attachments/assets/e9426f87-68f4-44be-bec2-2a3378c3378c" />
@@ -185,3 +186,8 @@
 
 ---
 
+## Вывод
+
+В ходе работы реализован ETL-процесс на базе Pentaho Data Integration. Данные из CSV-файла (~10 000 строк) нормализованы в три таблицы (`orders`, `customers`, `products`) с фильтрацией по менеджеру Kelly Williams. Выполнена дедупликация, маппинг поля `returned` и обработка некорректных записей через лог.
+
+Дополнительно реализованы две аналитические трансформации: статистика доставки по способам отправки и анализ прибыли по категориям и регионам. Результаты анализа прибыли сохраняются в отдельную таблицу `analytics_profit` для последующей выборки из БД. Визуализация данных выполнена в Google Colab (`analytics_var17.ipynb`).

@@ -122,7 +122,7 @@
       <description>Truncate orders, customers, products before load</description>
       <type>SQL</type>
       <connection>MySQL_Target</connection>
-      <sql>DELETE FROM orders; DELETE FROM customers; DELETE FROM products;</sql>
+      <sql>DELETE FROM orders; DELETE FROM customers; DELETE FROM products; DELETE FROM analytics_profit;</sql>
       <useVariableSubstitution>N</useVariableSubstitution>
       <sqlfromfile>N</sqlfromfile>
       <sqlfilename/>
