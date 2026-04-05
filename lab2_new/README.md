@@ -10,92 +10,29 @@
 
 ---
 
-## Структура репозитория
+### 1. Подготовка базы данных
 
-```
-lab2/
-├── CSV_to_MySQL.kjb          # Главный Job
-├── Load_Orders.ktr           # Трансформация: загрузка заказов
-├── Load_Customers.ktr        # Трансформация: загрузка клиентов
-├── Load_Products.ktr         # Трансформация: загрузка продуктов
-├── Analytics_Delivery.ktr    # Доп. задание 1: статистика доставки
-├── Analytics_Profit.ktr      # Доп. задание 2: анализ прибыли
-└── README.md
-```
+<img width="778" height="158" alt="image" src="https://github.com/user-attachments/assets/6a3f30f2-e5fd-4e7d-85eb-4455723f47ee" />
 
+<img width="779" height="156" alt="image" src="https://github.com/user-attachments/assets/e62c469d-e22b-4d9a-80b2-2650b05e0522" />
+
+<img width="782" height="147" alt="image" src="https://github.com/user-attachments/assets/6488ec92-9f97-4380-ad14-163babc3bbdf" />
 ---
 
-## Техническое окружение
 
-- **ETL**: Pentaho Data Integration 9.4
-- **СУБД**: MySQL 8.0 (удалённый сервер `95.131.149.21:3306`)
-- **БД**: `mgpu_ico_etl_17`
-- **Исходные данные**: `samplestore-general.csv` (~10 000 строк, разделитель `;`)
-- **ОС**: Ubuntu 22.04, Java OpenJDK 11
+### 2. Настройка Job (Главного задания)
 
----
+Создаем Job (CSV_to_MySQL.kjb), который управляет всем процессом
+<img width="1319" height="629" alt="image" src="https://github.com/user-attachments/assets/07720850-2129-498f-a17e-790bac76039f" />
 
-## Структура базы данных
+2.1 Set Variables: Создаем переменную пути к файлу.
+<img width="755" height="384" alt="image" src="https://github.com/user-attachments/assets/3cf3665a-6324-406d-87a2-2c91020e6d89" />
 
-```sql
--- Таблица заказов (факты)
-CREATE TABLE orders (
-    row_id      INT PRIMARY KEY,
-    order_date  DATE,
-    ship_date   DATE,
-    ship_mode   VARCHAR(50),
-    sales       DECIMAL(10,2),
-    quantity    INT,
-    discount    DECIMAL(4,2),
-    profit      DECIMAL(10,2),
-    returned    TINYINT(1) DEFAULT 0,
-    person      VARCHAR(100)
-);
+2.2 Check File Exists: Проверка наличия файла ${CSV_FILE_PATH}.
+<img width="336" height="151" alt="image" src="https://github.com/user-attachments/assets/a948c3fd-2b50-4fa4-a5a3-ef8b594733b7" />
 
--- Таблица клиентов (измерение)
-CREATE TABLE customers (
-    id            INT AUTO_INCREMENT PRIMARY KEY,
-    customer_id   VARCHAR(20) NOT NULL,
-    customer_name VARCHAR(100),
-    segment       VARCHAR(50),
-    country       VARCHAR(100),
-    city          VARCHAR(100),
-    state         VARCHAR(100),
-    postal_code   VARCHAR(20),
-    region        VARCHAR(50),
-    person        VARCHAR(100)
-);
-
--- Таблица продуктов (измерение)
-CREATE TABLE products (
-    id            INT AUTO_INCREMENT PRIMARY KEY,
-    product_id    VARCHAR(20) NOT NULL,
-    category      VARCHAR(50),
-    sub_category  VARCHAR(50),
-    product_name  VARCHAR(255),
-    person        VARCHAR(100)
-);
-```
-
----
-
-## Описание Job (CSV_to_MySQL.kjb)
-
-Job управляет всем ETL-процессом и выполняет шаги в следующем порядке:
-
-```
-START
-  → Set Variables
-  → Check File Exists
-      ├─ [файл существует] → Truncate Tables
-      └─ [файла нет]       → HTTP Download → Truncate Tables
-  → Load Orders
-  → Load Customers
-  → Load Products
-  → Analytics Delivery
-  → Analytics Profit
-  → Success
-```
+2.3 HTTP (Download): Загрузка файла, если его нет.
+<img width="1115" height="802" alt="image" src="https://github.com/user-attachments/assets/af27fe85-c9f3-43e4-8afd-b83047b27af2" />
 
 ### Шаги Job
 
@@ -113,47 +50,8 @@ START
 | **Analytics Profit** | Transformation | Запускает `Analytics_Profit.ktr` |
 | **Success** | Success | Завершение |
 
-### Настройка шага Set Variables
-
-- **Variable**: `CSV_FILE_PATH`
-- **Value**: `/home/god/Downloads/datain/samplestore-general.csv`
-- **Scope**: JVM (доступна всем трансформациям)
-
-### Настройка шага HTTP Download
-
-- **URL**: `https://raw.githubusercontent.com/BosenkoTM/workshop-on-ETL/main/data_for_lessons/samplestore-general.csv`
-- **Target file**: `${CSV_FILE_PATH}`
-
-> Скриншот шага HTTP:
-
-![HTTP Step](screenshots/http_step.png)
-
-### Настройка шага Check File Exists
-
-- **Filename**: `${CSV_FILE_PATH}`
-- При успехе (файл есть) → переход к `Truncate Tables`
-- При ошибке (файла нет) → переход к `HTTP Download`
-
-> Скриншот шага Check File Exists:
-
-![Check File Exists](screenshots/check_file_exists.png)
-
----
 
 ## Трансформация 1: Load Orders
-
-**Файл**: `Load_Orders.ktr`
-
-**Пайплайн**:
-```
-CSV file input
-  → Select Values (переименование и конвертация типов)
-  → Value Mapper (Returned: Yes→1, No→0, empty→0)
-  → Memory Group By (дедупликация по row_id)
-  → Filter Rows (фильтр по варианту + валидация)
-      ├─ TRUE  → Table Output (таблица orders)
-      └─ FALSE → Write to Log (лог ошибок)
-```
 
 ### Шаги
 
