@@ -23,17 +23,16 @@
 ### 2. Настройка Job (Главного задания)
 
 Создаем Job (CSV_to_MySQL.kjb), который управляет всем процессом
-<img width="984" height="668" alt="image" src="https://github.com/user-attachments/assets/79f60831-d521-4728-8ea1-51a41fcd055a" />
+<img width="1319" height="629" alt="image" src="https://github.com/user-attachments/assets/07720850-2129-498f-a17e-790bac76039f" />
 
 2.1 Set Variables: Создаем переменную пути к файлу.
-<img width="1199" height="549" alt="image" src="https://github.com/user-attachments/assets/f052961b-3ec6-4141-8bb9-186eefad119f" />
+<img width="755" height="384" alt="image" src="https://github.com/user-attachments/assets/3cf3665a-6324-406d-87a2-2c91020e6d89" />
 
 2.2 Check File Exists: Проверка наличия файла ${CSV_FILE_PATH}.
-<img width="412" height="179" alt="image" src="https://github.com/user-attachments/assets/edd8ba54-3f18-4de3-98de-3daea0213d55" />
+<img width="336" height="151" alt="image" src="https://github.com/user-attachments/assets/a948c3fd-2b50-4fa4-a5a3-ef8b594733b7" />
 
 2.3 HTTP (Download): Загрузка файла, если его нет.
-<img width="1207" height="772" alt="image" src="https://github.com/user-attachments/assets/d58fb3d9-6497-462c-8f47-1cbe87b74847" />
-
+<img width="1115" height="802" alt="image" src="https://github.com/user-attachments/assets/af27fe85-c9f3-43e4-8afd-b83047b27af2" />
 
 2.4 Transformation. Последовательный вызов трех трансформаций для загрузки данных.
 <img width="744" height="711" alt="image" src="https://github.com/user-attachments/assets/95581a0f-8a31-4f65-93ed-467775b2faef" />
