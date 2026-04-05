@@ -119,6 +119,7 @@
 | **Memory Group By** | Группировка по `ship_mode`: COUNT заказов, SUM продаж, AVG дней доставки, SUM количества. |
 | **Write to Log** | Вывод результата в лог. |
 
+<img width="602" height="397" alt="image" src="https://github.com/user-attachments/assets/e89bef03-a5c0-4f7d-bc2e-e73704473ac3" />
 
 ---
 
@@ -134,6 +135,8 @@
 | **Select Values** | Выбор полей: `category`, `region`, `sales`, `profit`, `discount`. |
 | **Memory Group By** | Группировка по `category` + `region`: COUNT, SUM прибыли, AVG прибыли, AVG скидки. |
 | **Write to Log** | Вывод результата в лог. |
+
+<img width="639" height="742" alt="image" src="https://github.com/user-attachments/assets/e9426f87-68f4-44be-bec2-2a3378c3378c" />
 
 ---
 
