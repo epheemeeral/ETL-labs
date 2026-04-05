@@ -175,9 +175,13 @@
 
 <img width="975" height="345" alt="image" src="https://github.com/user-attachments/assets/337b1293-dd2c-4799-b940-9d642ce58b99" />
 
+<img width="1491" height="498" alt="image" src="https://github.com/user-attachments/assets/cc149c11-07bf-4830-846c-865fda9a0c03" />
+
 ### Статистика по прибыли
 
 <img width="1128" height="385" alt="image" src="https://github.com/user-attachments/assets/65b1528a-3d78-48dc-bece-4fa7aef0b9b4" />
+
+<img width="781" height="392" alt="image" src="https://github.com/user-attachments/assets/1a90dcbf-46cc-4dad-b6bd-71a126f72f86" />
 
 ---
 
